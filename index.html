@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Coração Batendo Jessyzinha</title>
+    <title>Página Jessyzinha com Chuva de Corações</title>
     <style>
         body {
             display: flex;
@@ -11,85 +11,145 @@
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            background-color: #1a0d0d; /* Fundo escuro/avermelhado */
+            background-color: #1a0d0d;
             overflow: hidden;
-        }
-
-        /* O Contêiner do Coração */
-        .coracao-container {
             position: relative;
-            width: 200px;
-            height: 180px; /* Ajustado para a proporção do coração */
-            animation: batimento 1.4s infinite ease-in-out; /* Animação de batida */
-            display: flex; /* Para centralizar o texto */
-            justify-content: center;
-            align-items: center;
         }
 
-        /* A Forma do Coração (CSS Pura) */
+        /* 1. O NOME NA PÁGINA INTEIRA (Fundo) */
+        .fundo-nome {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            align-content: space-around;
+            opacity: 0.1;
+            pointer-events: none;
+        }
+
+        .nome-repetido {
+            font-family: 'Arial Black', sans-serif;
+            font-size: 8vh;
+            color: #e91e63;
+            text-shadow: 0 0 5px rgba(233, 30, 99, 0.5);
+            margin: 10px;
+            user-select: none;
+        }
+        
+        /* 2. O CORAÇÃO (Forma em CSS) */
         .coracao {
             position: absolute;
-            width: 100px;
-            height: 100px;
-            background-color: #e91e63; /* Rosa avermelhado */
-            transform: rotate(-45deg); /* Gira para formar o coração */
-            box-shadow: 0 0 40px rgba(233, 30, 99, 0.7), /* Brilho */
-                        0 0 80px rgba(233, 30, 99, 0.5); /* Brilho mais intenso */
+            background-color: #ff4081; /* Rosa vibrante */
+            transform: rotate(-45deg);
+            z-index: 100;
+            top: 0; /* Garante que o contêiner inicial comece no topo */
+            /* A largura e altura reais são definidas no JavaScript */
         }
 
-        /* As Duas Partes Arredondadas Superiores do Coração */
         .coracao::before,
         .coracao::after {
             content: '';
             position: absolute;
-            width: 100px;
-            height: 100px;
             border-radius: 50%;
-            background-color: #e91e63;
+            background-color: #ff4081;
+            /* Largura e altura são definidas no JS */
         }
 
+        /* As posições das "orelhas" do coração */
         .coracao::before {
-            top: -50px;
+            top: calc(var(--heart-size) / -2); /* Move metade do tamanho para cima */
             left: 0;
+            width: var(--heart-size);
+            height: var(--heart-size);
         }
 
         .coracao::after {
-            left: 50px;
+            left: calc(var(--heart-size) / 2); /* Move metade do tamanho para a direita */
             top: 0;
+            width: var(--heart-size);
+            height: var(--heart-size);
         }
 
-        /* O Texto "JESSYZINHA" */
-        .texto-jessyzinha {
-            font-family: 'Arial Black', sans-serif;
-            font-size: 28px; /* Tamanho ajustado para caber no coração */
-            color: #ffffff; /* Cor branca do texto */
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            z-index: 10; /* Para garantir que o texto fique acima do coração */
-            position: relative; /* Necessário para z-index funcionar */
-
-            /* Efeito 3D Básico para o Texto */
-            text-shadow:
-                0 0 5px #ffeb3b,  /* Brilho ao redor do texto */
-                0 2px 0 #c2185b,  /* Camada 3D 1 (Sombra) */
-                0 4px 0 #880e4f;  /* Camada 3D 2 (Profundidade máxima) */
-        }
-        
-        /* Animação de Batimento Cardíaco */
-        @keyframes batimento {
-            0% { transform: scale(1); }
-            15% { transform: scale(1.1); } /* Aumenta um pouco */
-            30% { transform: scale(1); }
-            45% { transform: scale(1.1); } /* Outro batimento */
-            60% { transform: scale(1); }
-            100% { transform: scale(1); }
+        /* 3. ANIMAÇÃO DE CHUVA CORRIGIDA */
+        @keyframes chuva {
+            0% { 
+                /* Começa um pouco acima do topo da tela */
+                transform: translateY(-10vh) rotate(0deg); 
+                opacity: 0.8; 
+            }
+            100% { 
+                /* Vai para muito abaixo da tela */
+                transform: translateY(120vh) rotate(360deg); 
+                opacity: 0; 
+            }
         }
     </style>
 </head>
 <body>
-    <div class="coracao-container">
-        <div class="coracao"></div>
-        <div class="texto-jessyzinha">JESSYZINHA</div>
-    </div>
+    
+    <div class="fundo-nome" id="fundo-nome"></div>
+
+    <script>
+        const NOME = "JESSYZINHA";
+        const containerNome = document.getElementById('fundo-nome');
+
+        // --- Parte 1: Preencher a Tela com o Nome ---
+        // Preenche com aproximadamente 10 linhas de 50 nomes.
+        const numNomes = 500; 
+        for (let i = 0; i < numNomes; i++) {
+            const span = document.createElement('span');
+            span.className = 'nome-repetido';
+            span.textContent = NOME;
+            containerNome.appendChild(span);
+        }
+
+        // --- Parte 2: A Chuva de Corações Corrigida ---
+        function criarCoracao() {
+            const coracao = document.createElement('div');
+            coracao.className = 'coracao';
+            
+            // Posição inicial: aleatória na largura da tela
+            coracao.style.left = `${Math.random() * 100}vw`; 
+            
+            // Tamanho aleatório para ilusão de profundidade (de 15px a 30px)
+            const size = Math.random() * 15 + 15; 
+            
+            // Define o tamanho do coração principal
+            coracao.style.width = `${size}px`;
+            coracao.style.height = `${size}px`;
+            
+            // Usa Variáveis CSS para definir o tamanho das "orelhas"
+            coracao.style.setProperty('--heart-size', `${size}px`); 
+
+            // Duração aleatória da queda (de 5s a 15s)
+            const duration = Math.random() * 10 + 5; 
+            coracao.style.animationDuration = `${duration}s`;
+            
+            // Atraso aleatório no início (para que não caiam todos juntos)
+            coracao.style.animationDelay = `${Math.random() * 5}s`; 
+            
+            // Garante que a animação rode a Chuva
+            coracao.style.animationName = 'chuva'; 
+            coracao.style.animationTimingFunction = 'linear'; /* Queda constante */
+            coracao.style.animationIterationCount = 'infinite'; /* Loop infinito (será removido a seguir) */
+            
+            document.body.appendChild(coracao);
+
+            // Remove o coração após a queda (tempo total: duração + atraso)
+            setTimeout(() => {
+                coracao.remove();
+            }, (duration + 5) * 1000); 
+        }
+
+        // Gera a chuva a cada 200 milissegundos
+        setInterval(criarCoracao, 200); 
+
+        // Gera corações iniciais para começar a chuva imediatamente
+        for (let i = 0; i < 20; i++) {
+            criarCoracao();
+        }
+    </script>
 </body>
 </html>
