@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sol 3D Interativo - Jessyzinha</title>
+    <style>
+        body { margin: 0; overflow: hidden; background-color: #000000; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+    
+<script async src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+    <script async src="https://unpkg.com/three@0.160.0/examples/js/controls/OrbitControls.js"></script>
+
+    <script>
+        // Quando o DOM estiver pronto
+        window.onload = function() {
+            // 1. Cenário Básico
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.body.appendChild(renderer.domElement);
+
+            // Adiciona controles de órbita (interatividade do mouse)
+            const controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.25;
+
+            // 2. Criar o Sol (Geometria + Material)
+            const sunGeometry = new THREE.SphereGeometry(1, 64, 64);
+            const textureLoader = new THREE.TextureLoader();
+            
+            // Tenta carregar a textura, se falhar, usa uma cor simples.
+            const sunMaterial = new THREE.MeshBasicMaterial({
+                color: 0xFF8C00, // Cor laranja-sol de fallback
+                emissive: new THREE.Color(0xFF8C00),
+                emissiveIntensity: 1.5 
+            });
+
+            // O TEXTO 3D FOI REMOVIDO AQUI para evitar o erro de carregamento de fonte
+
+            const sun = new THREE.Mesh(sunGeometry, sunMaterial);
+            scene.add(sun);
+
+            // Tenta carregar a textura do sol (pode falhar no file:///)
+            textureLoader.load(
+                'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/planets/sun_major.jpg', 
+                function(texture) {
+                    sun.material.map = texture;
+                    sun.material.needsUpdate = true;
+                },
+                undefined,
+                function(err) {
+                    console.error('Falha ao carregar a textura do sol, usando cor sólida.');
+                    // O material já tem a cor de fallback, então não faz nada aqui.
+                }
+            );
+
+            // 3. Adicionar uma Luz Ponto para simular o brilho do sol
+            const pointLight = new THREE.PointLight(0xFFD700, 2, 100);
+            scene.add(pointLight);
+
+            // 4. Efeito de Brilho Externo (Glow)
+            const glowGeometry = new THREE.SphereGeometry(1.05, 64, 64);
+            const glowMaterial = new THREE.MeshStandardMaterial({
+                color: 0xFFD700,
+                transparent: true,
+                opacity: 0.2,
+                blending: THREE.AdditiveBlending,
+                side: THREE.BackSide
+            });
+            const sunGlow = new THREE.Mesh(glowGeometry, glowMaterial);
+            scene.add(sunGlow);
+
+            camera.position.z = 3;
+
+            // 5. Animação (Loop de Renderização)
+            function animate() {
+                requestAnimationFrame(animate);
+
+                sun.rotation.y += 0.005;
+                sunGlow.rotation.y += 0.005;
+
+                controls.update();
+                renderer.render(scene, camera);
+            }
+            animate();
+
+            // Responde a redimensionamento da janela
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+        };
+    </script>
+</body>
+</html>
