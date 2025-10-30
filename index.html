@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sol Simples Jessyzinha</title>
+    <title>Coração Batendo Jessyzinha</title>
     <style>
         body {
             display: flex;
@@ -11,64 +11,84 @@
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            background-color: #0d0d1a; /* Fundo escuro */
+            background-color: #1a0d0d; /* Fundo escuro/avermelhado */
             overflow: hidden;
         }
 
-        /* O Sol: Esfera 2D com Efeito de Profundidade */
-        .sol {
-            width: 300px;
-            height: 300px;
-            border-radius: 50%; /* Faz um círculo */
-            
-            /* Efeito de Cores Quentes e Brilho (Radial Gradient) */
-            background: radial-gradient(circle at 50% 50%, 
-                #fff8e1 0%,     /* Centro branco/amarelo claro */
-                #ffc107 30%,    /* Amarelo forte */
-                #ff9800 70%,    /* Laranja */
-                #f44336 100%    /* Vermelho (Borda) */
-            );
-            
-            /* Sombra e Brilho Exterior */
-            box-shadow: 
-                0 0 40px rgba(255, 152, 0, 0.8), /* Brilho laranja */
-                0 0 80px rgba(255, 87, 34, 0.6), /* Brilho vermelho */
-                0 0 120px rgba(255, 193, 7, 0.4); /* Brilho amarelo */
-            
-            display: flex;
+        /* O Contêiner do Coração */
+        .coracao-container {
+            position: relative;
+            width: 200px;
+            height: 180px; /* Ajustado para a proporção do coração */
+            animation: batimento 1.4s infinite ease-in-out; /* Animação de batida */
+            display: flex; /* Para centralizar o texto */
             justify-content: center;
             align-items: center;
-            position: relative;
-            animation: pulse 4s infinite alternate; /* Animação de pulsar */
         }
 
-        /* O Texto "JESSYZINHA" com Efeito 3D */
+        /* A Forma do Coração (CSS Pura) */
+        .coracao {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background-color: #e91e63; /* Rosa avermelhado */
+            transform: rotate(-45deg); /* Gira para formar o coração */
+            box-shadow: 0 0 40px rgba(233, 30, 99, 0.7), /* Brilho */
+                        0 0 80px rgba(233, 30, 99, 0.5); /* Brilho mais intenso */
+        }
+
+        /* As Duas Partes Arredondadas Superiores do Coração */
+        .coracao::before,
+        .coracao::after {
+            content: '';
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: #e91e63;
+        }
+
+        .coracao::before {
+            top: -50px;
+            left: 0;
+        }
+
+        .coracao::after {
+            left: 50px;
+            top: 0;
+        }
+
+        /* O Texto "JESSYZINHA" */
         .texto-jessyzinha {
             font-family: 'Arial Black', sans-serif;
-            font-size: 40px;
+            font-size: 28px; /* Tamanho ajustado para caber no coração */
             color: #ffffff; /* Cor branca do texto */
             text-transform: uppercase;
-            
-            /* O SEGREDO DO EFEITO 3D EM CSS (Múltiplas Sombras Deslocadas) */
+            letter-spacing: 1px;
+            z-index: 10; /* Para garantir que o texto fique acima do coração */
+            position: relative; /* Necessário para z-index funcionar */
+
+            /* Efeito 3D Básico para o Texto */
             text-shadow:
                 0 0 5px #ffeb3b,  /* Brilho ao redor do texto */
-                0 3px 0 #ff9800,  /* Camada 3D 1 (Sombra) */
-                0 6px 0 #ff5722,  /* Camada 3D 2 (Profundidade) */
-                0 9px 0 #f44336;  /* Camada 3D 3 (Profundidade máxima) */
-            
-            letter-spacing: 2px;
-            z-index: 10;
+                0 2px 0 #c2185b,  /* Camada 3D 1 (Sombra) */
+                0 4px 0 #880e4f;  /* Camada 3D 2 (Profundidade máxima) */
         }
         
-        /* Efeito de Animação (Pulsação do Sol) */
-        @keyframes pulse {
+        /* Animação de Batimento Cardíaco */
+        @keyframes batimento {
             0% { transform: scale(1); }
-            100% { transform: scale(1.03); }
+            15% { transform: scale(1.1); } /* Aumenta um pouco */
+            30% { transform: scale(1); }
+            45% { transform: scale(1.1); } /* Outro batimento */
+            60% { transform: scale(1); }
+            100% { transform: scale(1); }
         }
     </style>
 </head>
 <body>
-    <div class="sol">
+    <div class="coracao-container">
+        <div class="coracao"></div>
         <div class="texto-jessyzinha">JESSYZINHA</div>
     </div>
 </body>
