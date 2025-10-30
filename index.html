@@ -33,19 +33,16 @@
             const sunGeometry = new THREE.SphereGeometry(1, 64, 64);
             const textureLoader = new THREE.TextureLoader();
             
-            // Tenta carregar a textura, se falhar, usa uma cor simples.
             const sunMaterial = new THREE.MeshBasicMaterial({
                 color: 0xFF8C00, // Cor laranja-sol de fallback
                 emissive: new THREE.Color(0xFF8C00),
                 emissiveIntensity: 1.5 
             });
 
-            // O TEXTO 3D FOI REMOVIDO AQUI para evitar o erro de carregamento de fonte
-
             const sun = new THREE.Mesh(sunGeometry, sunMaterial);
             scene.add(sun);
 
-            // Tenta carregar a textura do sol (pode falhar no file:///)
+            // Tenta carregar a textura do sol (com tratamento de erro)
             textureLoader.load(
                 'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/planets/sun_major.jpg', 
                 function(texture) {
